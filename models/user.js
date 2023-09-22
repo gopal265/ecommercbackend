@@ -1,27 +1,35 @@
 import mongoose from "mongoose";
+import validator from "validator";
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     phoneNumber :{
         type : Number,
         require : [true,'Error : Please enter valid number'],
-        unique : true,
+        default : 0,
+        sparse :true
     },
     password :{
         type : String
     },
+    verify:{
+        type :String,
+        default : "Unverified"
+    },
     firstName :{
         type:String,
-        require:[true,'Error : Please Enter First Name ']
+        require:[true,'Please Enter First Name ']
     },
     lastName :{
         type : String
     },
     userName:{
-        type : String,
+        type : String, 
 
     },
     email :{
-        type : String
+        type : String,
+        validate : [validator.isEmail,"Please Enter Valid Email"],
+        unique : true,
     },
     address:{
         pincode:{
@@ -40,7 +48,17 @@ const userSchema = mongoose.Schema({
     },
     otp :{
         type : Number,
+        createdAt:{
+            type:Date,
+            require :true,
+            expires : 300,
+            default: Date.now()
+        }
         
     }
 }
 )
+
+const User =  mongoose.model("User",userSchema);
+
+export default User;

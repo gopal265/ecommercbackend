@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+import mongoose  from "mongoose"
 
-const Bag = new mongoose.Schema({
+const  bagSchema = new mongoose.Schema({
     user:{
         type:mongoose.ObjectId,
         ref:"MynUser",
@@ -22,4 +22,6 @@ const Bag = new mongoose.Schema({
    
 })
 
-module.exports = mongoose.model('Bag', Bag)
+const Bag = mongoose.model('Bag', bagSchema);
+
+export default Bag;
