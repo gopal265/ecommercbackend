@@ -1,10 +1,13 @@
 import express from "express";
-import { registerBYMail, registerByMobile, verifyOtp } from "../controllers/auth.js";
-
+import { registerBYMail,   verifyOtp ,updateUser, getuser, loginByPassword} from "../controllers/auth.js";
+import isAuthenticateuser from '../middlewares/auth.js'
 const router = express.Router();
 
-router.post("/registerbymobile",registerByMobile);
+// router.post("/registerbymobile",registerByMobile);
 router.post('/registerbymail',registerBYMail)
-router.post('/verifyotp',verifyOtp)
+router.post('/:email/verifyotp',verifyOtp)
+router.patch('/:email/updateuser',updateUser)
+router.get('/:email/getuser',getuser)
+router.get('/:email/:password/login',loginByPassword)
 
 export default router;
