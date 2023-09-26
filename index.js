@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv"
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js"
+import orderRoutes from "./routes/order.js"
 import cookieParser from "cookie-parser";
 
 dotenv.config()
@@ -25,7 +26,7 @@ app.use(cors(corsOptions));
 
 
 app.use('/auth',authRoutes)
-
+app.use('/order',orderRoutes)
 
 let port = process.env.PORT || 5000;
 const connection_Url = process.env.CONNECTION_URL

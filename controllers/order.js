@@ -11,26 +11,25 @@ export const createOrder = RC(async (req, res, next) => {
 
 export const createWishList = RC(async (req, res, next) => {
    const {user, orderItems} = req.body
-   const Finduser = await WishList.find({user: user})
+   const findUser = await WishList.findOne({user: user})
     
-   if (Finduser.length !== 0 ) {
-      const product = await WishList.find({user:user})
-      function f (data){
-        return data.product ==  orderItems[0].product
-      }
-      if (product[0].orderItems.filter(f).length > 0) {
+   if (findUser) {
+   
+      if (findUser.orderItems.filter(prod => prod.product == orderItems[0].product).length > 0) {
      
-        return next(new errorHandler("Product all ready added in Wishlist", 404));
+        return next(new errorHandler("Product already added in Wishlist", 400));
       }else{
         await WishList.updateOne({user: user}, {$push:{
           orderItems: [orderItems[0]]
         }})
+        return res.status(200).json({message:"Product added to WishList"})
       
       }
       
     }else{
-       console.log('else')
+      
       const wishlist = await WishList.create(req.body)
+      return res.status(200).json({message:"Product added to WishList"})
 
     }
     
@@ -57,7 +56,7 @@ export const deleteWish = RC(async (req, res, next) => {
     console.log(req.body)
     const {user, product} = req.body
   
-    const users =  await Wishlist.updateOne({user: user}, {$pull:{
+    const users =  await WishList.updateOne({user: user}, {$pull:{
           orderItems: {product:product}
         }})
   
@@ -70,83 +69,83 @@ export const deleteWish = RC(async (req, res, next) => {
    
    })
 
-export const createBag = A(async (req, res, next) => {
-  // console.log(req.body)
-  const {user, orderItems} = req.body
-  console.log(orderItems)
-  const Finduser = await Bag.find({user: user})
-   if (Finduser.length !== 0 ) {
+// export const createBag = A(async (req, res, next) => {
+//   // console.log(req.body)
+//   const {user, orderItems} = req.body
+//   console.log(orderItems)
+//   const Finduser = await Bag.find({user: user})
+//    if (Finduser.length !== 0 ) {
     
-    const product = await Bag.find({user:user})
-    function f (data){
-      return data.product ==  orderItems[0].product
-    }
+//     const product = await Bag.find({user:user})
+//     function f (data){
+//       return data.product ==  orderItems[0].product
+//     }
     
-    if ( product[0].orderItems.filter(f).length > 0 ) {
+//     if ( product[0].orderItems.filter(f).length > 0 ) {
 
-      return next(new Errorhandler("Product all ready added in Bag", 404));
+//       return next(new errorHandler("Product all ready added in Bag", 404));
 
-    }else{
+//     }else{
 
-      await Bag.updateOne({user: user}, {$push:{
-        orderItems: [orderItems[0]]
-      }})
+//       await Bag.updateOne({user: user}, {$push:{
+//         orderItems: [orderItems[0]]
+//       }})
     
-    }
+//     }
      
-   }else{
+//    }else{
 
-     await Bag.create(req.body)
+//      await Bag.create(req.body)
 
-   }
+//    }
    
-   res.status(200).json({
-     success:true,
+//    res.status(200).json({
+//      success:true,
      
- })
+//  })
  
- })
+//  })
 
- exports.getbag = A(async (req, res, next) => {
+//  exports.getbag = A(async (req, res, next) => {
     
-  const bag = await Bag.findOne({user: req.params.id}).populate('orderItems.product')
+//   const bag = await Bag.findOne({user: req.params.id}).populate('orderItems.product')
 
   
-  res.status(200).json({
-    success:true,
-    bag
+//   res.status(200).json({
+//     success:true,
+//     bag
     
-})
+// })
 
-})
+// })
 
-exports.updateqtybag = A(async (req, res, next) => {
+// exports.updateqtybag = A(async (req, res, next) => {
  
-  const {id, qty} = req.body
+//   const {id, qty} = req.body
   
-  const bag = await Bag.updateOne({'orderItems._id':id},{
-    $set:{'orderItems.$.qty': qty}
-  })
+//   const bag = await Bag.updateOne({'orderItems._id':id},{
+//     $set:{'orderItems.$.qty': qty}
+//   })
 
-   res.status(200).json({
-     success:true
+//    res.status(200).json({
+//      success:true
      
- })
+//  })
  
- })
+//  })
 
- exports.deletebag = A(async (req, res, next) => {
-  console.log(req.body)
-  const {user, product} = req.body
+//  exports.deletebag = A(async (req, res, next) => {
+//   console.log(req.body)
+//   const {user, product} = req.body
 
-  const users =  await Bag.updateOne({user: user}, {$pull:{
-        orderItems: {product:product}
-      }})
+//   const users =  await Bag.updateOne({user: user}, {$pull:{
+//         orderItems: {product:product}
+//       }})
    
-   res.status(200).json({
-     success:true
+//    res.status(200).json({
+//      success:true
      
- })
+//  })
  
- })
+//  })
 
