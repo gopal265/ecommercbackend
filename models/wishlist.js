@@ -3,14 +3,14 @@ import mongoose from "mongoose"
 const wishlistSchema = new mongoose.Schema({
     user:{
         type:mongoose.ObjectId,
-        ref:"MynUser",
+        ref:"User",
         required:true
     },
     orderItems: [
     {
         product:{
         type:mongoose.ObjectId,
-        ref:"myntraproduct",
+        ref:"Product",
         required:true}
     }
     ],
