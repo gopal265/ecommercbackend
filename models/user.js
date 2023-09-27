@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
         sparse :true
     },
     password :{
-        type : String
+        type : String,
+        default : ''
     },
     verify:{
         type :String,
@@ -23,7 +24,8 @@ const userSchema = new mongoose.Schema({
         type : String
     },
     userName:{
-        type : String, 
+        type : String,
+        require :true 
 
     },
     email :{
@@ -53,7 +55,10 @@ const userSchema = new mongoose.Schema({
             require :true,
             expires : 300,
             default: Date.now()
-        }
+        },
+    token:{
+        type:String
+    }
         
     }
 }
