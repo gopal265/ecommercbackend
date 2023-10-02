@@ -1,4 +1,3 @@
-
 import express from 'express'
 import { createWishList, deleteWish, getWishList } from '../controllers/order.js';
 
@@ -9,4 +8,3 @@ router.get('/getwish/:id',getWishList)
 router.put('/deletewish',deleteWish)
 
 export default router;
-
