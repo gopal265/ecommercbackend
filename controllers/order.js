@@ -22,21 +22,18 @@ export const createWishList = RC(async (req, res, next) => {
         await WishList.updateOne({user: user}, {$push:{
           orderItems: [orderItems[0]]
         }})
-        return res.status(200).json({message:"Product added to WishList"})
+        return res.status(200).json({message:"Product added to WishList",success:true})
       
       }
       
     }else{
       
       const wishlist = await WishList.create(req.body)
-      return res.status(200).json({message:"Product added to WishList"})
+      return res.status(200).json({message:"Product added to WishList",success:true})
 
     }
     
-    res.status(200).json({
-      success:true,
-      
-  })
+  
   
   })
 
@@ -69,83 +66,78 @@ export const deleteWish = RC(async (req, res, next) => {
    
    })
 
-// export const createBag = A(async (req, res, next) => {
-//   // console.log(req.body)
-//   const {user, orderItems} = req.body
-//   console.log(orderItems)
-//   const Finduser = await Bag.find({user: user})
-//    if (Finduser.length !== 0 ) {
+export const createBag = RC(async (req, res, next) => {
+  // console.log(req.body)
+  const {user, orderItems} = req.body
+  console.log(orderItems)
+  const findUser = await Bag.findOne({user: user})
+   if ( findUser ) {
     
-//     const product = await Bag.find({user:user})
-//     function f (data){
-//       return data.product ==  orderItems[0].product
-//     }
+    if(findUser.orderItems.filter(prod => prod.product == orderItems[0].product).length > 0){
+
+      return next(new errorHandler("Product all ready added in Bag", 400));
+
+    }else{
+
+      await Bag.updateOne({user: user}, {$push:{
+        orderItems: [orderItems[0]]
+      }
+    })
+      return res.status(2000).json({message:"Product added to Bag successfully",success:true})
     
-//     if ( product[0].orderItems.filter(f).length > 0 ) {
-
-//       return next(new errorHandler("Product all ready added in Bag", 404));
-
-//     }else{
-
-//       await Bag.updateOne({user: user}, {$push:{
-//         orderItems: [orderItems[0]]
-//       }})
-    
-//     }
+    }
      
-//    }else{
+   }else{
 
-//      await Bag.create(req.body)
+     await Bag.create(req.body)
+     return res.status(200).json({message:"Product added to Bag successfully",success:true})
 
-//    }
+   }
    
-//    res.status(200).json({
-//      success:true,
-     
-//  })
  
-//  })
+ 
+ })
 
-//  exports.getbag = A(async (req, res, next) => {
+ export const getBag = RC(async (req, res, next) => {
     
-//   const bag = await Bag.findOne({user: req.params.id}).populate('orderItems.product')
+  const bag = await Bag.findOne({user: req.params.id}).populate('orderItems.product')
 
   
-//   res.status(200).json({
-//     success:true,
-//     bag
+  res.status(200).json({
+    success:true,
+    bag
     
-// })
+})
 
-// })
+})
 
-// exports.updateqtybag = A(async (req, res, next) => {
+export const updateBagQty = RC(async (req, res, next) => {
  
-//   const {id, qty} = req.body
+  const {id, qty} = req.body
   
-//   const bag = await Bag.updateOne({'orderItems._id':id},{
-//     $set:{'orderItems.$.qty': qty}
-//   })
+  const bag = await Bag.updateOne({'orderItems._id':id},{
+    $set:{'orderItems.$.qty': qty}
+  })
 
-//    res.status(200).json({
-//      success:true
+   res.status(200).json({
+     success:true
      
-//  })
+ })
  
-//  })
+ })
 
-//  exports.deletebag = A(async (req, res, next) => {
-//   console.log(req.body)
-//   const {user, product} = req.body
+ export const deleteBag = RC(async (req, res, next) => {
+  console.log(req.body)
+  const {user, product} = req.body
 
-//   const users =  await Bag.updateOne({user: user}, {$pull:{
-//         orderItems: {product:product}
-//       }})
+  const users =  await Bag.updateOne({user: user}, {$pull:{
+        orderItems: {product:product}
+      }})
    
-//    res.status(200).json({
-//      success:true
+   res.status(200).json({
+     success:true
      
-//  })
+ })
  
-//  })
+ })
 
