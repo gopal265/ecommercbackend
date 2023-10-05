@@ -60,7 +60,7 @@ export const  getSingleProduct = RC(async (req, res, next)=>{
         return next(new errorHandler("product not found", 400));
     }
     
-    const similar_product = await Product.find({category: product.category, brand: product.brand}).limit(15)
+    const similar_product = await Product.find({category: product.category}).limit(15)
     
     res.status(200).json({
         success:true,

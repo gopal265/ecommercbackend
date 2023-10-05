@@ -6,19 +6,32 @@ const orders = new mongoose.Schema({
         ref:"User",
         required:true
     },
-    orderItems: [{
-        type:mongoose.ObjectId,
-        ref:"Product",
-        qty:{type:Number},
+    orderItem:{
+        
+            type:mongoose.ObjectId,
+            ref:"Product",
+            required:true
+        }
+       
+   ,
+    qty:{
+        type:Number,
+        default: 1
+        },
+    paymentInfo:{
+        type:String,
         required:true
-    }],
+            },
+    status: { type: String, required: true },
+    orderStatus:{
+            type:String,
+            default:"Placed"
+        },
     createdAt:{
         type:Date,
         default: Date.now
-    },
-    paymentInfo:{
-        status: { type: String, required: true },
-    },
+    }
+    
     
 
 })

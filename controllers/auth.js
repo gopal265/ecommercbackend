@@ -1,7 +1,6 @@
 import  RC from   "../middlewares/resolveAndCatch.js";
 import User from '../models/user.js'
 import sendEmail from "../utils/sendMail.js";
-import sendMsg from "../utils/sendMessage.js";
 import dotenv from "dotenv"
 import { createToken } from "../utils/createToken.js";
 import errorhandler from "../utils/errorhandle.js";
@@ -141,9 +140,9 @@ export const updateUser =RC( async(req,res,next)=>{
 
 export const updateUserDetails =RC( async(req,res,next)=>{
   console.log(req.body)
-const {firstName,lastName,userName, pincode, address1, address2, citystate, phoneNumber,password} = req.body
+const {firstName,lastName,userName, pincode, address1, address2, city, phoneNumber,password} = req.body
   
-  const user = await User.updateOne({_id: req.params.id}, 
+  const user = await User.updateOne({email: req.params.email}, 
     {
       firstName,
       lastName,
@@ -153,7 +152,7 @@ const {firstName,lastName,userName, pincode, address1, address2, citystate, phon
       'address.address1':address1,
       'address.address2':address2,
       'address.pincode':pincode,
-      'address.citystate':citystate,
+      'address.city':city,
     })
 
 

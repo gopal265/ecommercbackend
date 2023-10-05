@@ -2,12 +2,58 @@ import RC from "../middlewares/resolveAndCatch.js"
 import WishList from "../models/wishlist.js"
 import Bag from "../models/bag.js"
 import errorHandler from "../utils/errorhandle.js"
+import Order from "../models/order.js"
+import sendEmail from "../utils/sendMail.js"
+import User from "../models/user.js"
+import { OrderedBulkOperation } from "mongodb"
+
+export const sendOTP = RC(async(req,res,next) =>{
+  const {email} = req.body
+  const user = await User.findOne({email})
+  let otp = Math.floor((1 + Math.random()) * 90000)
+  sendEmail(email,otp,user,res,next);
+})
 
 export const createOrder = RC(async (req, res, next) => {
     
-    const {} = req.body
+    const {id} = req.params
+    const {orderItems} = req.body
+    const findUser = User.findById(id)
+    if(findUser){
+      await orderItems.map(order =>{
+        Order.create({
+          user :id,
+          orderItem : order.orderItem,
+          paymentInfo:order.paymentInfo,
+          status: order.status,
+          qty :order.qty
+        })
+
+      })
+        
+        res.status(200).json({message:"Order Placed Successfully"})
+      }
+    
+    
+    else{
+      
+      res.status(404).json({message:"Order Place Successfully"})
+    }
+    
+
   
   })
+
+export const getOrders = RC(async (req,res,nex) =>{
+
+  const {id} = req.params
+  const findUser = await Order.find({user:id}).populate('orderItem')
+  res.status(200).json({
+    orderItems:findUser,
+    success:true
+  })
+})
+
 
 export const createWishList = RC(async (req, res, next) => {
    const {user, orderItems} = req.body
