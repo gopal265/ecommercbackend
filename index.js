@@ -34,7 +34,7 @@ app.use('/products',productRoutes)
 let port = process.env.PORT || 5000;
 const connection_Url = process.env.CONNECTION_URL
 
-mongoose.connect(connection_Url)
+mongoose.connect('mongodb+srv://gopal265reddy:dgr2605@ecommerce.wokf9ue.mongodb.net/?retryWrites=true&w=majority')
 .then(() =>
     app.listen(port, () =>{
     console.log(`Server started at port : ${port}`)
